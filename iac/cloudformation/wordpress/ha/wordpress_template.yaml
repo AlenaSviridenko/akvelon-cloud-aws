@@ -20,7 +20,7 @@ Parameters:
   InstanceType:
     Description: WebServer EC2 instance type
     Type: String
-    Default: t2.small
+    Default: t2.micro
     AllowedValues:
       - t1.micro
       - t2.nano
@@ -39,7 +39,7 @@ Parameters:
   DBClass:
     Description: Database instance class
     Type: String
-    Default: db.t2.small
+    Default: db.t2.micro
     AllowedValues:
       - db.t2.micro
       - db.t2.small
@@ -103,14 +103,11 @@ Mappings:
     t2.medium:
       Arch: HVM64
   AWSRegionArch2AMI:
-    eu-west-2:
-      HVM64: ami-0701e7be9b2a77600
-      HVMG2: NOT_SUPPORTED
-    eu-west-1:
-      HVM64: ami-0701e7be9b2a77600
+    us-west-2:
+      HVM64: ami-07a29e5e945228fa1
       HVMG2: NOT_SUPPORTED
 Resources:
-  ALBSecurityGroup:
+  ALBSecurityGroup: # --DONE------
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Application Load Balancer SG
@@ -120,13 +117,13 @@ Resources:
           ToPort: '80'
           CidrIp: 0.0.0.0/0
       VpcId: !Ref VpcId
-  ApplicationLoadBalancer:
+  ApplicationLoadBalancer: # ----DONE---
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
     Properties:
       Subnets: !Ref Subnets
       SecurityGroups:
         - !Ref ALBSecurityGroup
-  ALBListener:
+  ALBListener: # --DONE-----
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
     Properties:
       DefaultActions:
@@ -135,7 +132,7 @@ Resources:
       LoadBalancerArn: !Ref ApplicationLoadBalancer
       Port: '80'
       Protocol: HTTP
-  ALBTargetGroup:
+  ALBTargetGroup: # ----DONE----
     Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
     Properties:
       HealthCheckPath: /wp-admin/install.php
@@ -153,7 +150,7 @@ Resources:
           Value: lb_cookie
         - Key: stickiness.lb_cookie.duration_seconds
           Value: '30'
-  WebServerSecurityGroup:
+  WebServerSecurityGroup: # --DONE---------
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: >-
@@ -173,7 +170,7 @@ Resources:
           ToPort: '22'
           CidrIp: !Ref SSHLocation
       VpcId: !Ref VpcId
-  WebServerAutoScaleGroup:
+  WebServerAutoScaleGroup: # ----NOT DONE!!!!!---------
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
       VPCZoneIdentifier: !Ref Subnets
@@ -183,16 +180,16 @@ Resources:
       DesiredCapacity: !Ref WebServerCapacity
       TargetGroupARNs:
         - !Ref ALBTargetGroup
-    CreationPolicy:
+    CreationPolicy: # ?????
       ResourceSignal:
         Timeout: PT15M
-    UpdatePolicy:
+    UpdatePolicy: # ?????
       AutoScalingRollingUpdate:
         MinInstancesInService: '1'
         MaxBatchSize: '1'
         PauseTime: PT15M
         WaitOnResourceSignals: 'true'
-  WebServerAutoScaleGroupPolicyHigh:
+  WebServerAutoScaleGroupPolicyHigh: # ---DONE---------------
     Type: 'AWS::AutoScaling::ScalingPolicy'
     Properties:
       AdjustmentType: ChangeInCapacity
@@ -200,7 +197,7 @@ Resources:
       Cooldown: '30'
       AutoScalingGroupName: !Ref WebServerAutoScaleGroup
       ScalingAdjustment: 1
-  LaunchConfig:
+  LaunchConfig: # --DONE---------------
     Type: 'AWS::AutoScaling::LaunchConfiguration'
     Properties:
       ImageId: !FindInMap
@@ -254,7 +251,7 @@ Resources:
             sudo sed -i "s/'username_here'/'${DBUser}'/g" /var/www/wordpress/wp-config.php
             sudo sed -i "s/'password_here'/'${DBPassword}'/g" /var/www/wordpress/wp-config.php
             sudo sed -i "s/'localhost'/'${DBInstance.Endpoint.Address}'/g" /var/www/wordpress/wp-config.php
-  DBEC2SecurityGroup:
+  DBEC2SecurityGroup: # ---DONE-------------
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Open database for access
@@ -264,7 +261,7 @@ Resources:
           ToPort: '3306'
           SourceSecurityGroupId: !Ref WebServerSecurityGroup
       VpcId: !Ref VpcId
-  DBInstance:
+  DBInstance: # -----DONE---------------
     Type: 'AWS::RDS::DBInstance'
     Properties:
       DBName: !Ref DBName
