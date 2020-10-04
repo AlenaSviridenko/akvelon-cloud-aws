@@ -38,7 +38,7 @@ resource "aws_launch_configuration" "autoscaling_conf" {
             apt-get install -y python-setuptools
             mkdir -p /opt/aws/bin
             python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
-            /opt/aws/bin/cfn-signal -e $? --stack mystack-single --resource WebServerAutoScaleGroup --region ${aws.region}
+            /opt/aws/bin/cfn-signal -e $? --stack mystack-single --resource WebServerAutoScaleGroup --region ${var.region}
             sudo apt-get update
             sudo apt-get install -y php7.2-fpm nginx-full php-mysql
             sudo mkdir -p /var/www/wordpress
