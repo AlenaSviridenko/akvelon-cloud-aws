@@ -1,21 +1,21 @@
 variable "ec2_keypair_name" {
   type    = string
-  default = "wordpress_keypair"
+  default = "simple-server-key"
 }
 
 variable "ec2_ami" {
   type    = string
-  default = "ami-0701e7be9b2a77600" # ubuntu image
+  default = "ami-0e82959d4ed12de3f" # ubuntu image
 }
 
 variable "ec2_instance_type" {
   type    = string
-  default = "t2.small"
+  default = "t2.micro"
 }
 
 variable "db_instance_type" {
   type    = string
-  default = "db.t2.small"
+  default = "db.t2.micro"
 }
 
 variable "db_username" {
@@ -40,15 +40,15 @@ variable "db_allocated_storage" {
 
 variable "vpc_id" {
   type    = string
-  default = ""
+  default = "vpc-e19e308a"
 }
 
 variable "subnet_ids" {
-  type    = string
-  default = "subnet-29877e63,subnet-7b577150"
+  type    = list
+  default = [ "subnet-472dfb2c", "subnet-7a404f00" ]
 }
 
 variable "region" {
   type    = string
-  default = "us-west-2"
+  default = "us-east-2"
 }

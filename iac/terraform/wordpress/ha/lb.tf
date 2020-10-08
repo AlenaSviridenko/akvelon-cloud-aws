@@ -33,7 +33,7 @@ resource "aws_lb" "app_load_balancer" {
   load_balancer_type = "application"
   depends_on         = [aws_security_group.alb_sg]
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [var.subnet_ids]
+  subnets            = var.subnet_ids
 }
 
 resource "aws_lb_listener" "alb_listener" {

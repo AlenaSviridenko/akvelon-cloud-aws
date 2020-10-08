@@ -25,7 +25,7 @@ resource "aws_security_group" "wordpress_sg" {
 resource "aws_launch_configuration" "autoscaling_conf" {
   name            = "autoscaling-launch-conf-wordpress"
   key_name        = var.ec2_keypair_name
-  image_id        = "ami-07a29e5e945228fa1"
+  image_id        = var.ec2_ami
   instance_type   = var.ec2_instance_type
   security_groups = [aws_security_group.wordpress_sg.id]
   depends_on      = [aws_security_group.wordpress_sg, aws_security_group.wordpress_db_sg, aws_db_instance.db]
@@ -75,7 +75,7 @@ resource "aws_autoscaling_group" "autoscaling_g" {
   min_size             = 1
   max_size             = 2
   desired_capacity     = 1
-  vpc_zone_identifier  = [var.subnet_ids]
+  vpc_zone_identifier  = var.subnet_ids
   target_group_arns    = [aws_lb_target_group.alb_tg.arn]
 }
 
