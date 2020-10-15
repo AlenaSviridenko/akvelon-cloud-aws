@@ -4,7 +4,7 @@ resource "aws_security_group" "wordpress_sg" {
     from_port = 80
     protocol = "tcp"
     to_port = 80
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [aws_security_group.alb_sg.id]
   }
   ingress {
     from_port = 22
