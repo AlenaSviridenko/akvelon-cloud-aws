@@ -9,7 +9,7 @@ Parameters:
   InstanceType:
     Description: WebServer EC2 instance type
     Type: String
-    Default: t2.small
+    Default: t2.micro
     AllowedValues:
       - t1.micro
       - t2.nano
@@ -255,11 +255,8 @@ Mappings:
     cc2.8xlarge:
       Arch: HVM64
   AWSRegionArch2AMI:
-    eu-west-2:
-      HVM64: ami-0701e7be9b2a77600
-      HVMG2: NOT_SUPPORTED
-    eu-west-1:
-      HVM64: ami-0701e7be9b2a77600
+    us-west-2:
+      HVM64: ami-07a29e5e945228fa1
       HVMG2: NOT_SUPPORTED
 Resources:
   WordpressSecurityGroup:
